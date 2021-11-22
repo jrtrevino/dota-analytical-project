@@ -21,22 +21,16 @@ def load_api_key(key_name):
         sys.exit(-1)
     return API_KEY
 
-# Performs a GET request on a specified route of the Dota api.
-# If no route is provided, the default is /publicMatches.
+# Performs a GET request on the /publicMatches route of the Dota api.
 # Requires an open Dota API key.
 # api_key -> a string representation of an api_key
-# num_matches -> number of unique matches to return (optional).
-# route -> string representation of an api route (optional).
+# num_matches -> number of unique matches to return (optiona - default 100).
 # returns -> an array of unique match IDs.
-# Please only provide num_matches or route, but not both.
 
 
-def get_api_resource(api_key, num_matches=None, route=None):
-    if num_matches and route:
-        print("Please provide only num_matches or route.")
-        return
+def get_match_ids(api_key, num_matches=None):
     query_strings = f"api_key={api_key}"
-    resource = route if route else "publicMatches"
+    resource = "publicMatches"
     uri = f"{api_endpoint}{resource}?{query_strings}"
     default_matches = 100
     response_json = None
@@ -61,4 +55,4 @@ def get_api_resource(api_key, num_matches=None, route=None):
 if __name__ == "__main__":
     # grab api key
     key = load_api_key('API_KEY')
-    match_ids = get_api_resource(key)
+    match_ids = get_match_ids(key)

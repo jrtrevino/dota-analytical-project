@@ -5,7 +5,7 @@ Any and all preprocessing code should retrieve any necessary data from external 
 
 ## Parse_dota_api
 
-A simply Python script that will request and parse data from the OpenDota API. 
+A simple Python script that will request and parse data from the OpenDota API. 
 You can view the api [here](https://www.opendota.com/)
 
 ### dependencies

@@ -55,7 +55,7 @@ def get_match_ids(api_key, num_matches=None):
             print(f"Unable to fetch endpoint: {uri}")
             print(f"{e}")
             break
-    return match_ids
+    return list(match_ids)
 
 # Requests a specific match by id on the open Dota API.
 # The request is then prepared for entry into our dataset.
@@ -78,6 +78,8 @@ def get_match_by_id(match_list, api_key):
             game_mode = response_json['game_mode']
             lobby_type = response_json['lobby_type']
             players = response_json['players']
+            print(response_json)
+            break
             # TODO: parse response_json[players] for dataset entry
             # TODO: Create dataset entry and append into dataset_entries
         except Exception as e:
@@ -91,4 +93,4 @@ if __name__ == "__main__":
     # grab api key
     key = load_api_key('API_KEY')
     match_ids = get_match_ids(key)
-    get_match_by_id(list(match_ids), key)
+    get_match_by_id(match_ids, key)

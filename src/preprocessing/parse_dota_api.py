@@ -29,13 +29,16 @@ def load_api_key(key_name):
 
 
 def get_match_ids(api_key, num_matches=None):
+    default_matches = 100
+    if num_matches and num_matches % default_matches != 0:
+        print("Please provide a num_matches integer divisible by 100.")
+        return
     query_strings = f"api_key={api_key}"
     resource = "publicMatches"
     uri = f"{api_endpoint}{resource}?{query_strings}"
-    default_matches = 100
     response_json = None
     match_ids = set()
-    while len(match_ids) != (num_matches if num_matches else default_matches):
+    while len(match_ids) <= (num_matches if num_matches else default_matches):
         try:
             response = requests.get(uri)
             response_json = response.json()

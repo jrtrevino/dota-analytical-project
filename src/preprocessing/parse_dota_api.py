@@ -3,7 +3,6 @@ import os
 import requests
 import sys
 
-from requests.sessions import default_headers
 
 api_endpoint = "https://api.opendota.com/api/"
 

@@ -1,11 +1,13 @@
 from dotenv import load_dotenv
+import json
 import os
 import requests
 import sys
 
 
 api_endpoint = "https://api.opendota.com/api/"
-
+radiant = 1  # set as appropriate for team_id
+dire = -1
 
 # Loads API Key from .env file.
 # key_name -> string name for api key in .env file.
@@ -38,6 +40,7 @@ def get_match_ids(api_key, num_matches=None):
     uri = f"{api_endpoint}{resource}?{query_strings}"
     response_json = None
     match_ids = set()
+    print("Begin HTTP Request -> GET")
     while len(match_ids) <= (num_matches if num_matches else default_matches):
         try:
             response = requests.get(uri)
@@ -54,8 +57,38 @@ def get_match_ids(api_key, num_matches=None):
             break
     return match_ids
 
+# Requests a specific match by id on the open Dota API.
+# The request is then prepared for entry into our dataset.
+# match_list -> a list containing unique match_ids.
+# api_key -> string representation of an api_key
+# returns -> an array of entries to place into a .csv.
+
+
+def get_match_by_id(match_list, api_key):
+    query_strings = f"api_key={api_key}"
+    resource = "matches/"
+    route = f"{api_endpoint}{resource}"
+    response_json = None
+    dataset_entries = []
+    for match_id in match_list:
+        try:
+            response = requests.get(f"{route}{match_id}?{query_strings}")
+            response_json = response.json()
+            team_mapping = radiant if response_json['radiant_win'] else dire
+            game_mode = response_json['game_mode']
+            lobby_type = response_json['lobby_type']
+            players = response_json['players']
+            # TODO: parse response_json[players] for dataset entry
+            # TODO: Create dataset entry and append into dataset_entries
+        except Exception as e:
+            print("Could not parse match.")
+            print(e)
+            break
+    return dataset_entries
+
 
 if __name__ == "__main__":
     # grab api key
     key = load_api_key('API_KEY')
     match_ids = get_match_ids(key)
+    get_match_by_id(list(match_ids), key)

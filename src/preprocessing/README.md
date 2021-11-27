@@ -38,3 +38,32 @@ To run this program, type:
 ```
 
 This will, by default, request and parse 100 responses from the OpenDota API.
+
+## Parsing Wrapper
+
+This program takes .csv files containing match_ids returned from the parse dota API and creates two new .csv files for use with machine learning.
+
+The two files generated contain:
+1. Game information metadata
+2. Player information for players who competed in a game.
+
+### Running
+
+To run this program, type:
+
+```
+$ parsing_wrapper.py [-h] input output key
+```
+
+Positional arguments are as follows:
+  input       Input file path.
+  output      Output file path.
+  key         Your dota API key
+
+  An example program run would be like so:
+
+  ```
+  $ python3 parsing_wrapper.py ./path/to/file.csv ./path/to/output.csv 12345-23455-57-685684356
+  ```
+
+  This will parse match_ids from file.csv and generate csv information.

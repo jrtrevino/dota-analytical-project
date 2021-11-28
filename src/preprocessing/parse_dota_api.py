@@ -78,25 +78,19 @@ def get_match_by_id(match_list, api_key):
     query_strings = f"api_key={api_key}"
     resource = "matches/"
     route = f"{api_endpoint}{resource}"
+    responses = []
     response_json = None
-    dataset_entries = []
     for match_id in match_list:
         try:
             response = requests.get(f"{route}{match_id}?{query_strings}")
             response_json = response.json()
-            team_mapping = radiant if response_json['radiant_win'] else dire
-            game_mode = response_json['game_mode']
-            lobby_type = response_json['lobby_type']
-            players = response_json['players']
-            print(response_json)
-            break
-            # TODO: parse response_json[players] for dataset entry
-            # TODO: Create dataset entry and append into dataset_entries
+            responses.append(response_json)
         except Exception as e:
             print("Could not parse match.")
             print(e)
-            break
-    return dataset_entries
+            return
+            
+    return responses
 
 
 if __name__ == "__main__":

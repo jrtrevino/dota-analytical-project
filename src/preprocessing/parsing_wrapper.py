@@ -16,8 +16,11 @@ def run(match_id_list, api_key):
             print("Grabbed match data from game: {}".format(match_id))
             # our response dataframe 'master'
             df = pd.json_normalize(responses[0])
-            df.drop('players', inplace=True, axis=1)
-            df.drop('picks_bans', inplace=True, axis=1)
+            try:
+                df.drop('players', inplace=True, axis=1)
+                df.drop('picks_bans', inplace=True, axis=1)
+            except KeyError as e:
+                continue
             # normalize players column
             players = pd.json_normalize(responses[0], record_path=["players"], record_prefix="players.")
             game_array.append(df)
@@ -35,8 +38,8 @@ def run(match_id_list, api_key):
 
 def df_to_csv(output_name, df_game, df_players, error_array):
     try:
-        df_game.to_csv("game-{}".format(output_name), mode="w+")
-        df_players.to_csv("players-{}".format(output_name), mode="w+")
+        df_game.to_csv("{}-game.csv".format(output_name[:-4]), mode="w+")
+        df_players.to_csv("{}-players.csv".format(output_name[:-4]), mode="w+")
         if len(error_array) > 0:
             with open(output_name[:-3] + "-error.csv", "w+") as f:
                 for match_id in error_array:
@@ -44,8 +47,8 @@ def df_to_csv(output_name, df_game, df_players, error_array):
     except Exception as e:
         print(e)
         print("Error making csv. Attempting to write to ./temp")
-        df_game.to_csv('./temp-game-{}'.format(output_name), 'w+')
-        df_players.to_csv('./temp-players-{}'.format(output_name), 'w+')
+        df_game.to_csv('./{}-temp-game-csv'.format(output_name[:-4]), 'w+')
+        df_players.to_csv('./{}-temp-players.csv'.format(output_name[:-4]), 'w+')
 
 
 def load_file(filename):

@@ -12,7 +12,7 @@ def run(match_id_list, api_key):
     for match_id in match_id_list:
         # grab data from api
         responses = dota.get_match_by_id([match_id], api_key)
-        if responses:
+        if len(responses) > 0:
             print("Grabbed match data from game: {}".format(match_id))
             # our response dataframe 'master'
             df = pd.json_normalize(responses[0])
@@ -26,9 +26,11 @@ def run(match_id_list, api_key):
             print("Could not parse data from game: {}".format(match_id))
             error_array.append(match_id)
         time.sleep(1) # for api throttle limit
-    game_to_csv = pd.concat(game_array)
-    players_to_csv = pd.concat(player_array)
-    return game_to_csv, players_to_csv, error_array
+    if len(game_array) > 0:
+        game_to_csv = pd.concat(game_array)
+        players_to_csv = pd.concat(player_array)
+        return game_to_csv, players_to_csv, error_array
+    return 
 
 
 def df_to_csv(output_name, df_game, df_players, error_array):

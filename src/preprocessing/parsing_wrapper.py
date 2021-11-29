@@ -9,6 +9,7 @@ def run(match_id_list, api_key):
     game_array = []
     player_array = []
     error_array = []
+    counter = 0
     for match_id in match_id_list:
         # grab data from api
         responses = dota.get_match_by_id([match_id], api_key)
@@ -30,6 +31,9 @@ def run(match_id_list, api_key):
             print("Could not parse data from game: {}".format(match_id))
             error_array.append(match_id)
         time.sleep(1) # for api throttle limit
+        counter += 1 # api call number
+        if counter % 20 == 0:
+            time.sleep(1)
     if len(game_array) > 0:
         try:
             game_to_csv = pd.concat(game_array)

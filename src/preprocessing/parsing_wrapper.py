@@ -30,10 +30,7 @@ def run(match_id_list, api_key):
         else:
             print("Could not parse data from game: {}".format(match_id))
             error_array.append(match_id)
-        time.sleep(1) # for api throttle limit
         counter += 1 # api call number
-        if counter % 20 == 0:
-            time.sleep(1)
     if len(game_array) > 0:
         try:
             game_to_csv = pd.concat(game_array)
@@ -53,7 +50,7 @@ def df_to_csv(output_name, df_game, df_players, error_array):
         if len(error_array) > 0:
             with open(output_name[:-3] + "-error.csv", "w+") as f:
                 for match_id in error_array:
-                    f.write(match_id)
+                    f.write("{}\n".format(match_id))
     except Exception as e:
         print(e)
         print("Error making csv. Attempting to write to ./temp")
@@ -80,5 +77,5 @@ if __name__ == "__main__":
     if not args.key:
         api_key = dota.load_api_key('API_KEY')
     match_ids = load_file(args.input)
-    df_game, df_players, errors = run(match_ids, args.key if args.key else api_key)
+    df_game, df_players, errors = run(match_ids[10000:], args.key if args.key else api_key)
     df_to_csv(args.output ,df_game, df_players, errors)

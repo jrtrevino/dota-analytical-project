@@ -15,25 +15,31 @@ def run(match_id_list, api_key):
         if len(responses) > 0:
             print("Grabbed match data from game: {}".format(match_id))
             # our response dataframe 'master'
-            df = pd.json_normalize(responses[0])
             try:
+                df = pd.json_normalize(responses[0])
                 df.drop('players', inplace=True, axis=1)
                 df.drop('picks_bans', inplace=True, axis=1)
-            except KeyError as e:
+                players = pd.json_normalize(responses[0], record_path=["players"], record_prefix="players.")
+                game_array.append(df)
+                player_array.append(players)
+            except Exception as e:
+                error_array.append(match_id)
                 continue
             # normalize players column
-            players = pd.json_normalize(responses[0], record_path=["players"], record_prefix="players.")
-            game_array.append(df)
-            player_array.append(players)
         else:
             print("Could not parse data from game: {}".format(match_id))
             error_array.append(match_id)
         time.sleep(1) # for api throttle limit
     if len(game_array) > 0:
-        game_to_csv = pd.concat(game_array)
-        players_to_csv = pd.concat(player_array)
-        return game_to_csv, players_to_csv, error_array
-    return 
+        try:
+            game_to_csv = pd.concat(game_array)
+            players_to_csv = pd.concat(player_array)
+            return game_to_csv, players_to_csv, error_array
+        except Exception as e: 
+            print("Could not concatenate")
+            print(e)
+    
+    return game_array, player_array, error_array
 
 
 def df_to_csv(output_name, df_game, df_players, error_array):
@@ -70,5 +76,5 @@ if __name__ == "__main__":
     if not args.key:
         api_key = dota.load_api_key('API_KEY')
     match_ids = load_file(args.input)
-    df_game, df_players, errors = run(match_ids[:3], args.key if args.key else api_key)
+    df_game, df_players, errors = run(match_ids, args.key if args.key else api_key)
     df_to_csv(args.output ,df_game, df_players, errors)

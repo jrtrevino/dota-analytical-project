@@ -88,7 +88,7 @@ def get_match_by_id(match_list, api_key):
         except Exception as e:
             print("Could not parse match.")
             print(e)
-            return
+            return []
             
     return responses
 

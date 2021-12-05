@@ -1,0 +1,7 @@
+.venv
+matchid-output
+env
+*.csv
+*.txt
+group1-parsed
+*.out

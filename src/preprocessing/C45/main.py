@@ -7,7 +7,7 @@ if __name__ == '__main__':
     df_match = pd.read_csv('match.csv')
     # df_match_outcome = pd.read_csv('match_outcomes.csv')
     df_players = pd.read_csv('players.csv')
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     df_heroes = pd.read_csv('hero_names.csv')
 
     match_id = df_match['match_id'].values
@@ -83,7 +83,7 @@ if __name__ == '__main__':
                 hero_pick = []
                 current_match_id += 1
 
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
 
     #change the 2nd line to match
     with open('hero_pick_outcomes.csv', 'r') as file:

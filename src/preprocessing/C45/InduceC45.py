@@ -307,8 +307,8 @@ if __name__ == '__main__':
         if value == '0':
             omitted_attributes.append(index)
     data = Data(filename, omitted_attributes)
-    import pdb; pdb.set_trace()
     # import pdb; pdb.set_trace()
+    import pdb; pdb.set_trace()
     head_node = Node('')
     algorithm_c45(data, data.data, data.attributes, float(threshold), head_node, gain_ratio)
     final_json = {'dataset': filename,

@@ -65,6 +65,7 @@ if __name__ == '__main__':
     with open(imported_tree) as f:
         classify_json = json.load(f)
     data = Data(filename, [])
+    import pdb; pdb.set_trace()
     classified_result = classify_data(data, classify_json['node'])
     classified_result = list(classified_result.values())
     actual_result = list(map(lambda x: x[data.index_class_variable], data.data))
@@ -86,3 +87,4 @@ if __name__ == '__main__':
     print('Total Number Of Records Correctly Classified: ', correct_classified)
     print('Total number of records Incorrectly Classified: ', len(classified_result) - correct_classified)
     print('Overall accuracy and error rate of the classifier: ', correct_classified/len(classified_result) * 100, '%')
+    import pdb; pdb.set_trace()
